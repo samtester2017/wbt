@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_wbt" default="compile.module.wbt">
+  <dirname property="module.wbt.basedir" file="${ant.file.module_wbt}"/>
+  
+  <property name="module.jdk.home.wbt" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.wbt" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.wbt" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.wbt" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="wbt.output.dir" value="${module.wbt.basedir}/out/production/wbt"/>
+  <property name="wbt.testoutput.dir" value="${module.wbt.basedir}/out/test/wbt"/>
+  
+  <path id="wbt.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="wbt.module.production.classpath">
+    <path refid="${module.jdk.classpath.wbt}"/>
+  </path>
+  
+  <path id="wbt.runtime.production.module.classpath">
+    <pathelement location="${wbt.output.dir}"/>
+  </path>
+  
+  <path id="wbt.module.classpath">
+    <path refid="${module.jdk.classpath.wbt}"/>
+    <pathelement location="${wbt.output.dir}"/>
+  </path>
+  
+  <path id="wbt.runtime.module.classpath">
+    <pathelement location="${wbt.testoutput.dir}"/>
+    <pathelement location="${wbt.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.wbt">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.wbt">
+    <patternset refid="excluded.from.module.wbt"/>
+  </patternset>
+  
+  <path id="wbt.module.sourcepath">
+    <dirset dir="${module.wbt.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.wbt" depends="compile.module.wbt.production,compile.module.wbt.tests" description="Compile module wbt"/>
+  
+  <target name="compile.module.wbt.production" depends="register.custom.compilers" description="Compile module wbt; production classes">
+    <mkdir dir="${wbt.output.dir}"/>
+    <javac2 destdir="${wbt.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.wbt}/javac">
+      <compilerarg line="${compiler.args.wbt}"/>
+      <bootclasspath refid="wbt.module.bootclasspath"/>
+      <classpath refid="wbt.module.production.classpath"/>
+      <src refid="wbt.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.wbt"/>
+    </javac2>
+    
+    <copy todir="${wbt.output.dir}">
+      <fileset dir="${module.wbt.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.wbt.tests" depends="register.custom.compilers,compile.module.wbt.production" description="compile module wbt; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.wbt" description="cleanup module">
+    <delete dir="${wbt.output.dir}"/>
+    <delete dir="${wbt.testoutput.dir}"/>
+  </target>
+</project>
