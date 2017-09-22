@@ -39,7 +39,7 @@ public class Board extends JPanel implements ActionListener {
     static int B_WIDTH = 1024;
     static int B_HEIGHT = 768;
     static int LEVEL_DEPTH = 600;
-    static int START_LIVES = 5;
+    static int START_LIVES = 1;
 	private static double ZSTRETCH = 125; // lower = more stretched on z axis
 	private static int SPEED_LEV_ADVANCE = 7;  // speed at which we to the next board after clearing a level
 	private static int GAME_OVER_BOARDSPEED = 40;  // speed at which the game recedes when player loses
